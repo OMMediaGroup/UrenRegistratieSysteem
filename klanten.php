@@ -9,7 +9,7 @@ $conn = new mysqli($Servername, $Username, $Password, $Dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+echo "Connected successfully";
 $sql = "SELECT
             `ID`,
             `Bedijf naam`,
