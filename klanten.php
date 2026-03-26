@@ -1,3 +1,3 @@
 <?php
-echo "Hello world! klanten.php";
+echo "Hello world! klanten.php...";
 ?>
