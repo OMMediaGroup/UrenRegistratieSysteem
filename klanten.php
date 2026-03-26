@@ -1,8 +1,15 @@
 <?php
-$Servername = "192.168.11.30:3306";
-$Username = "medewerker";
-$Password = "Luckiness-Zebra-Carefully8";
-$Dbname = "userstory_bedrijfsgegevens";
+
+require __DIR__ . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$Servername = $_ENV['DB_HOST'] . ':' . $_ENV['DB_PORT'];
+$Username   = $_ENV['DB_USERNAME'];
+$Password   = $_ENV['DB_PASSWORD'];
+$Dbname     = $_ENV['DB_NAME'];
+
 // maak verbinding met de database
 $conn = new mysqli($Servername, $Username, $Password, $Dbname);
 // controleer de verbinding
