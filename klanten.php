@@ -46,7 +46,7 @@ if (!$result) {
 </head>
 <body>
 
-<h1>Database Gegevens</h1>
+<h1>Klanten</h1>
 
 <table border="1" cellpadding="8">
     <tr>
