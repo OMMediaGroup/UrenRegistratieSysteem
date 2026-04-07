@@ -1,21 +1,37 @@
 <?php
-// 1. Database verbinding
-$host = '192.168.11.30'; 
-$db   = 'userstory_bedrijfsgegevens';
-$user = 'medewerker';
-$pass = 'Luckiness-Zebra-Carefully8'; 
+// 1. Laden van de database variabelen via Dotenv
+require __DIR__ . '/vendor/autoload.php';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_TIMEOUT => 5
-    ]);
-    $rijen = $pdo->query("SELECT * FROM Werkzaamheden")->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $fout = $e->getMessage();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$Servername = $_ENV['DB_HOST'] . ':' . $_ENV['DB_PORT'];
+$Username   = $_ENV['DB_USERNAME'];
+$Password   = $_ENV['DB_PASSWORD'];
+$Dbname     = $_ENV['DB_NAME'];
+
+// 2. Verbinding maken met mysqli
+$conn = new mysqli($Servername, $Username, $Password, $Dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// 3. Query specifiek voor Werkzaamheden
+$sql = "SELECT 
+            `ID`, 
+            `Voornaam`, 
+            `Achternaam`, 
+            `Opdracht titel`, 
+            `Omschrijving werkzaamheden` 
+        FROM `Werkzaamheden`";
+
+$result = $conn->query($sql);
+
+if (!$result) {
+    die("SQL-fout: " . $conn->error);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -23,141 +39,226 @@ try {
     <title>Werkzaamheden Overzicht</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* DE ACHTERGROND (MATRIX STIJL) */
+        /* ACHTERGROND & BASIS */
         body {
             margin: 0;
             padding: 0;
-            background-color: #003d29;
+            background-color: #003d29; 
+            background-image: linear-gradient(rgba(0, 61, 41, 0.9), rgba(0, 61, 41, 0.9)), 
+                              url('https://www.transparenttextures.com/patterns/matrix.png');
             background-attachment: fixed;
             min-height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        /* NAVIGATIE BALK STIJLING */
-        .custom-nav {
-            background-color: #fff;
-            border: 3px solid #000;
-            border-radius: 50px;
-            margin: 20px auto;
-            max-width: 1100px;
-            padding: 10px 20px;
+        /* NAVIGATIEBALK: VOLLEDIGE BREEDTE & LICHTGROEN */
+        nav {
+            background-color: #e8f7ee; /* Lichtgroen uit je voorbeeld */
+            border-bottom: 3px solid #083c32;
+            width: 100%;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap; /* Voor als het scherm klein is */
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .nav-link-custom {
+        nav .links {
+            display: flex;
+        }
+
+        nav .links a {
             color: #000;
             text-decoration: none;
             font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 25px;
+            padding: 15px 20px;
+            border-right: 2px solid #083c32;
+            text-transform: lowercase;
             transition: 0.3s;
-            border: 2px solid transparent;
         }
 
-        .nav-link-custom:hover {
-            background-color: #e9ecef;
-            border: 2px solid #000;
+        nav .links a:last-child {
+            border-right: none;
         }
 
-        /* De actieve pagina (werkzaamheden) krijgt een zwarte achtergrond */
-        .nav-link-custom.active {
+        nav .links a:hover {
+            background-color: #d1f7e4;
+        }
+
+        nav .links a.active {
             background-color: #000;
             color: #fff;
-            border: 2px solid #000;
         }
 
-        /* CONTENT KAART */
-        .content-wrapper {
+        /* DE WITTE KAART */
+        .container-main {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 50px;
+            justify-content: center;
+            padding: 40px 0;
         }
 
         .main-card {
-            background-color: rgba(247, 255, 249, 0.95); 
-            width: 95%;
+            background-color: #e8f7ee; 
+            width: 90%;
             max-width: 1100px;
-            border-radius: 50px 50px 0 0; 
-            border: 3px solid #000;
+            border-radius: 40px 40px 0 0; 
+            border: 4px solid #083c32;
             padding: 40px;
-            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* HEADER ONDERDELEN */
-        .header-row { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
-        .logo { width: 70px; height: 70px; border: 2px solid #7a5dfa; background: white; display: flex; justify-content: center; align-items: center; }
-        h1 { font-weight: 900; font-size: 3rem; margin: 0; flex-grow: 1; letter-spacing: -1px; text-transform: lowercase; }
-        .search-bar { border-radius: 50px; border: 2px solid #000; padding: 10px 25px; width: 250px; outline: none; }
+        /* HEADER RIJ */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-        .table-container { border: 2px solid #000; background: #fff; border-radius: 10px; overflow: hidden; }
+        h1 {
+            font-weight: 900;
+            font-size: 35px;
+            margin: 0;
+            text-transform: lowercase;
+        }
 
-        @media print { .no-print { display: none !important; } body { background: white !important; } }
+        /* ZOEKBALK */
+        .searchbar {
+            background: white;
+            border-radius: 50px;
+            padding: 8px 20px;
+            border: 2px solid #083c32;
+            display: flex;
+            align-items: center;
+            width: 300px;
+        }
+
+        .searchbar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        /* PDF KNOP */
+        .pdf-btn {
+            background: #b30000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* TABEL STIJL */
+        .table-container {
+            border: 2px solid #083c32;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: #d7e9dd;
+            border-bottom: 3px solid #083c32;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* PRINT SETTINGS */
+        @media print {
+            nav, .searchbar, .pdf-btn { display: none !important; }
+            body { background: white !important; }
+            .main-card { border: none; width: 100%; box-shadow: none; padding: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="content-wrapper">
+<nav class="no-print">
+    <div class="links">
+        <a href="index.php">home</a>
+        <a href="medewerkers.php">medewerkers</a>
+        <a href="klanten.php">klanten</a>
+        <a href="werkzaamheden.php" class="active">werkzaamheden</a>
+        <a href="uren.php">uren</a>
+        <a href="werkgevers.php">werkgevers</a>
+        <a href="opdrachten.php">opdrachten</a>
+    </div>
+</nav>
+
+<div class="container-main">
+    <div class="main-card">
         
-        <nav class="custom-nav no-print">
-            <a href="index.php" class="nav-link-custom">home</a>
-            <a href="klanten.php" class="nav-link-custom">klanten</a>
-            <a href="medewerkers.php" class="nav-link-custom">medewerkers</a>
-            <a href="opdrachten.php" class="nav-link-custom">opdrachten</a>
-            <a href="uren.php" class="nav-link-custom">uren</a>
-            <a href="werkgevers.php" class="nav-link-custom">werkgevers</a>
-            <a href="werkzaamheden.php" class="nav-link-custom active">werkzaamheden</a>
-        </nav>
+        <div class="header-row no-print">
+            <h1>werkzaamheden</h1>
+            
+            <button class="pdf-btn" onclick="window.print()">Opslaan als PDF</button>
 
-        <div class="main-card">
-            <div class="header-row no-print">
-                <div class="logo">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2666/2666505.png" width="45" alt="logo">
-                </div>
-                <h1>werkzaamheden</h1>
-                <input type="text" id="zoekInput" class="search-bar" placeholder="Zoeken...">
-            </div>
-
-            <button onclick="window.print()" class="btn btn-dark mb-4 no-print">Opslaan als PDF</button>
-
-            <div class="table-container">
-                <table class="table table-hover m-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Medewerker</th>
-                            <th>Opdracht</th>
-                            <th>Omschrijving</th>
-                        </tr>
-                    </thead>
-                    <tbody id="werkTabel">
-                        <?php if(!empty($rijen)): ?>
-                            <?php foreach($rijen as $r): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($r['ID']); ?></td>
-                                <td><?= htmlspecialchars($r['Voornaam'] . " " . $r['Achternaam']); ?></td>
-                                <td><?= htmlspecialchars($r['Opdracht titel']); ?></td>
-                                <td><?= htmlspecialchars($r['Omschrijving werkzaamheden']); ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <div class="searchbar">
+                <input type="text" id="search" placeholder="zoeken..."> 🔍
             </div>
         </div>
-    </div>
 
-    <script>
-        // Zoekfunctie
-        document.getElementById('zoekInput').onkeyup = function() {
-            let waarde = this.value.toLowerCase();
-            document.querySelectorAll('#werkTabel tr').forEach(rij => {
-                rij.style.display = rij.innerText.toLowerCase().includes(waarde) ? '' : 'none';
-            });
-        };
-    </script>
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Medewerker</th>
+                        <th>Opdracht</th>
+                        <th>Omschrijving</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result && $result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['ID']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['Voornaam'] . " " . $row['Achternaam']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['Opdracht titel']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['Omschrijving werkzaamheden']) . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>Geen werkzaamheden gevonden</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// Zoekfunctie
+document.getElementById("search").addEventListener("input", function () {
+    const val = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+    
+    rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(val) ? "" : "none";
+    });
+});
+</script>
+
 </body>
 </html>
+
+<?php 
+$conn->close(); 
+?>
