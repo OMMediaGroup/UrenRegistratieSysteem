@@ -224,7 +224,7 @@ table tr:hover {
 <div class="container">
 
     <div class="title-row">
-        <h1><span class="title-icon">👥</span> klanten</h1>
+        <h1><span class="title-icon"></span> klanten</h1>
         <button class="pdf-btn" onclick="window.print()">🖨️ Als PDF opslaan</button>
 
         <div class="searchbar">
