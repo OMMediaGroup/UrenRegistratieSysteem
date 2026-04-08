@@ -51,45 +51,28 @@ if (!$result) {
             font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        /* NAVIGATIEBALK: VOLLEDIGE BREEDTE & LICHTGROEN */
         nav {
-            background-color: #e8f7ee; /* Lichtgroen uit je voorbeeld */
-            border-bottom: 3px solid #083c32;
-            width: 100%;
+            background: #e8f7ee;
+            padding: 15px;
             display: flex;
             justify-content: center;
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav .links {
-            display: flex;
+            border-bottom: 3px solid #083c32;
         }
 
         nav .links a {
+            margin: 0;
+            padding-right: 15px;
+            padding-left: 15px;
             color: #000;
-            text-decoration: none;
             font-weight: bold;
-            padding: 15px 20px;
+            text-decoration: none;
             border-right: 2px solid #083c32;
-            text-transform: lowercase;
-            transition: 0.3s;
         }
 
         nav .links a:last-child {
             border-right: none;
         }
 
-        nav .links a:hover {
-            background-color: #d1f7e4;
-        }
-
-        nav .links a.active {
-            background-color: #000;
-            color: #fff;
-        }
 
         /* DE WITTE KAART */
         .container-main {
@@ -102,7 +85,7 @@ if (!$result) {
             background-color: #e8f7ee; 
             width: 90%;
             max-width: 1100px;
-            border-radius: 40px 40px 0 0; 
+            border-radius: 40px; 
             border: 4px solid #083c32;
             padding: 40px;
             box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
