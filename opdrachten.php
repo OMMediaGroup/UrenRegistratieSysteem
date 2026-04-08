@@ -22,7 +22,7 @@ $sql = "SELECT
             `Omschrijving`,
             `Aanvraag datum`,
             `Benodigde kennis`,
-        FROM `opdrachten`";
+        FROM `Opdrachten`";
 
 $result = $conn->query($sql);
 
