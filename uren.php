@@ -55,8 +55,9 @@ nav {
 }
 
 nav .links a {
-    margin: 0 18px;
+    margin: 0;
     padding-right: 15px;
+    padding-left: 15px;
     color: #000;
     font-weight: bold;
     text-decoration: none;
@@ -125,6 +126,7 @@ table th {
     background: #d7e9dd;
     border-bottom: 3px solid #083c32;
     padding: 10px;
+    text-align: left;
 }
 
 table td {
@@ -163,30 +165,6 @@ table tr:hover {
     .pdf-btn {
         display: none !important;
     }
-
-    /*body {
-        background: white !important;
-        margin: 10px;
-    }*/
-
-    .container {
-        border: none;
-        margin: 0;
-        width: 100%;
-        padding: 0;
-    }
-
-    /*table {
-        border-collapse: collapse !important;
-        width: 100% !important;
-    }*/
-
-    /*table th {
-        background: #d7e9dd !important;
-        -webkit-print-color-adjust: exact;
-        border-bottom: 2px solid #083c32 !important;
-        position: static !important;
-    }*/
 }
 
 </style>
