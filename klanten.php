@@ -54,25 +54,26 @@ if (!$result) {
     }
 
     /* Navigatiebalk */
-   nav {
+  nav {
     background: #e8f7ee;
     padding: 15px;
     display: flex;
-    justify-content: center; /* navbar centreren */
-    border-bottom: 3px solid #0a4f42;
+    justify-content: center;
+    border-bottom: 3px solid #083c32;
 }
 
 nav .links a {
-    margin: 0 20px;
+    margin: 0;
+    padding-right: 15px;
+    padding-left: 15px;
     color: #000;
     font-weight: bold;
     text-decoration: none;
-    border-right: 2px solid #0a4f42;
-    padding-right: 15px;
+    border-right: 2px solid #083c32;
 }
 
 nav .links a:last-child {
-    border-right: none; /* laatste link zonder lijn */
+    border-right: none;
 }
 
     .searchbar {
