@@ -208,13 +208,13 @@ table tr:hover {
 <!-- Navigatie -->
 <nav>
     <div class="links">
-        <a href="#">home</a>
-        <a href="#">medewerkers</a>
-        <a href="#">klanten</a>
-        <a href="#">werkzaamheden</a>
-        <a href="#">uren</a>
-        <a href="#">werkgevers</a>
-        <a href="#">opdrachten</a>
+        <a href="index.php">home</a>
+        <a href="medewerkers.php">medewerkers</a>
+        <a href="klanten.php">klanten</a>
+        <a href="werkzaamheden.php">werkzaamheden</a>
+        <a href="uren.php">uren</a>
+        <a href="werkgevers.php">werkgevers</a>
+        <a href="opdrachten.php">opdrachten</a>
     </div>
 
     
@@ -224,7 +224,7 @@ table tr:hover {
 <div class="container">
 
     <div class="title-row">
-        <h1><span class="title-icon">👥</span> klanten</h1>
+        <h1><span class="title-icon"></span> klanten</h1>
         <button class="pdf-btn" onclick="window.print()">🖨️ Als PDF opslaan</button>
 
         <div class="searchbar">
