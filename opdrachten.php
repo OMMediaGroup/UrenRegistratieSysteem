@@ -16,14 +16,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// === GEVONDEN SQL-FOUT: trailing comma verwijderd ===
 $sql = "SELECT
             `ID`,
             `Klant naam`,
             `Titel`,
             `Omschrijving`,
             `Aanvraag datum`,
-            `Benodigde kennis`,
-        FROM `opdrachten`";
+            `Benodigde kennis`
+        FROM `opdrachten`";     // ← hier stond een komma te veel
 
 $result = $conn->query($sql);
 
@@ -34,162 +35,129 @@ if (!$result) {
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<title>opdrachten</title>
+    <meta charset="UTF-8">
+    <title>Opdrachten</title>
 
-<style>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0a4f42;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0a4f42; /* ✔ effen achtergrondkleur */
-}
+        /* Navigatie */
+        nav {
+            background: #e8f7ee;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 3px solid #083c32;
+        }
+        nav .links a {
+            margin: 0 18px;
+            padding-right: 15px;
+            color: #000;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 2px solid #083c32;
+        }
+        nav .links a:last-child {
+            border-right: none;
+        }
 
-/* Navigatie */
+        .container {
+            background: #e8f7ee;
+            margin: 40px auto;
+            width: 80%;
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px solid #083c32;
+        }
 
-nav {
-    background: #e8f7ee;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    border-bottom: 3px solid #083c32;
-}
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-nav .links a {
-    margin: 0 18px;
-    padding-right: 15px;
-    color: #000;
-    font-weight: bold;
-    text-decoration: none;
-    border-right: 2px solid #083c32;
-}
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+        }
 
-nav .links a:last-child {
-    border-right: none;
-}
+        /* Zoekveld */
+        .searchbar {
+            background: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            border: 2px solid #083c32;
+            display: flex;
+            align-items: center;
+        }
+        .searchbar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            width: 250px;
+        }
 
-.container {
-    background: #e8f7ee;
-    margin: 40px auto;
-    width: 80%;
-    padding: 30px;
-    border-radius: 20px;
-    border: 4px solid #083c32;
-}
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        table th {
+            position: sticky;
+            top: 0;
+            background: #d7e9dd;
+            border-bottom: 3px solid #083c32;
+            padding: 12px 10px;
+            text-align: left;
+        }
+        table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        table tr:hover {
+            background: #f6f6f6;
+        }
 
-/* Koptekst */
+        /* PDF knop */
+        .pdf-btn {
+            background: #b30000;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .pdf-btn:hover {
+            background: #8a0000;
+        }
 
-.title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.title-icon {
-    font-size: 35px;
-    margin-right: 10px;
-}
-
-h1 {
-    margin: 0;
-    font-size: 30px;
-    display: flex;
-    align-items: center;
-}
-
-/* Zoekveld */
-
-.searchbar {
-    background: white;
-    border-radius: 20px;
-    padding: 5px 10px;
-    border: 2px solid #083c32;
-    display: flex;
-    align-items: center;
-}
-.searchbar input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 15px;
-}
-
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-table th {
-    position: sticky;
-    top: 0;
-    background: #d7e9dd;
-    border-bottom: 3px solid #083c32;
-    padding: 10px;
-}
-
-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-table tr:hover {
-    background: #f6f6f6;
-}
-
-/* PDF knop */
-
-.pdf-btn {
-    background: #b30000;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.pdf-btn:hover {
-    background: #8a0000;
-}
-
-/* Styling voor het afdrukken / opslaan als PDF */
-
-@media print {
-
-    nav,
-    .searchbar,
-    .pdf-btn {
-        display: none !important;
-    }
-
-    body {
-        background: white !important;
-        margin: 10px;
-    }
-
-    .container {
-        border: none;
-        margin: 0;
-        width: 100%;
-        padding: 0;
-    }
-
-    table {
-        border-collapse: collapse !important;
-        width: 100% !important;
-    }
-
-    table th {
-        background: #d7e9dd !important;
-        -webkit-print-color-adjust: exact;
-        border-bottom: 2px solid #083c32 !important;
-        position: static !important;
-    }
-}
-
-</style>
+        /* Print styling */
+        @media print {
+            nav, .searchbar, .pdf-btn { display: none !important; }
+            body { background: white !important; margin: 10px; }
+            .container {
+                border: none;
+                margin: 0;
+                width: 100%;
+                padding: 0;
+            }
+            table th {
+                background: #d7e9dd !important;
+                -webkit-print-color-adjust: exact;
+                border-bottom: 2px solid #083c32 !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -207,12 +175,9 @@ table tr:hover {
 </nav>
 
 <div class="container">
-
     <div class="title-row">
         <h1>Opdrachten</h1>
-
         <button class="pdf-btn" onclick="window.print()">Opslaan als PDF</button>
-
         <div class="searchbar">
             <input type="text" id="search" placeholder="zoeken..."> 🔍
         </div>
@@ -230,7 +195,7 @@ table tr:hover {
 
         <?php
         if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>{$row['ID']}</td>";
                 echo "<td>{$row['Klant naam']}</td>";
@@ -245,17 +210,6 @@ table tr:hover {
         }
         ?>
     </table>
-
-</div>
-
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='8'>Geen Opdrachten gevonden</td></tr>";
-        }
-        ?>
-    </table>
-
 </div>
 
 <script>
@@ -263,7 +217,7 @@ table tr:hover {
 document.getElementById("search").addEventListener("input", function () {
     const val = this.value.toLowerCase();
     document.querySelectorAll("#dataTable tr").forEach((row, i) => {
-        if (i === 0) return;
+        if (i === 0) return; // header overslaan
         row.style.display = row.textContent.toLowerCase().includes(val) ? "" : "none";
     });
 });
