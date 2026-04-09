@@ -176,9 +176,8 @@ $dotenv->load();
         <a href="opdrachten.php">opdrachten</a>
     </div>
     
-    <!-- Extra navigatie-elementen uit jouw code (login + zoekveld) -->
+    <!-- Extra navigatie-elementen uit jouw code (alleen de login-knop blijft over) -->
     <div class="nav-actions">
-        <input type="text" id="search" placeholder="Zoeken..." style="padding: 8px 15px; border: 2px solid #083c32; border-radius: 20px; width: 220px; font-size: 15px;">
         <button class="login-trigger" onclick="openLogin()">log in</button>
     </div>
 </nav>
@@ -240,18 +239,6 @@ $dotenv->load();
             alert("Vul zowel username als wachtwoord in.");
         }
     }
-
-    // Zoekfunctie in de navigatie (voor nu alleen een demo-alert)
-    // Je kunt dit later uitbreiden naar een globale zoekopdracht over alle pagina's
-    document.getElementById("search").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
-            const query = this.value.trim().toLowerCase();
-            if (query) {
-                alert("🔍 Zoeken naar: \"" + query + "\"\n\n(Globale zoekfunctie kan later worden uitgebreid)");
-                // Voorbeeld: je kunt hier window.location = "medewerkers.php?zoek=" + query; doen
-            }
-        }
-    });
 </script>
 
 </body>
