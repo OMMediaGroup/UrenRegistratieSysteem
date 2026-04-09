@@ -10,12 +10,11 @@ $conn = @new mysqli($Servername, $Username, $Password, $Dbname);
 if ($conn->connect_error) {
     die("Connectie mislukt: " . $conn->connect_error);
 }
-// SQL voor medewerkers-tabel
+// SQL voor medewerkers-tabel (zonder Email kolom)
 $sql = "SELECT
             `ID`,
             `Voornaam`,
             `Achternaam`,
-            `Email`,
             `Telefoonnummer`,
             `Functie`,
             `Afdeling`
@@ -183,7 +182,6 @@ table tr:hover {
             <th>ID</th>
             <th>Voornaam</th>
             <th>Achternaam</th>
-            <th>Email</th>
             <th>Telefoonnummer</th>
             <th>Functie</th>
             <th>Afdeling</th>
@@ -195,14 +193,13 @@ table tr:hover {
                 echo "<td>{$row['ID']}</td>";
                 echo "<td>{$row['Voornaam']}</td>";
                 echo "<td>{$row['Achternaam']}</td>";
-                echo "<td>{$row['Email']}</td>";
                 echo "<td>{$row['Telefoonnummer']}</td>";
                 echo "<td>{$row['Functie']}</td>";
                 echo "<td>{$row['Afdeling']}</td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='7'>Geen medewerkers gevonden</td></tr>";
+            echo "<tr><td colspan='6'>Geen medewerkers gevonden</td></tr>";
         }
         ?>
     </table>
