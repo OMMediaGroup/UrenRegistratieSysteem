@@ -26,7 +26,7 @@ $sql = "SELECT
             `Telefoonnummer`,
             `Functie`,
             `Afdeling`
-        FROM `medewerkers`";
+        FROM `Medewerkers`";
 
 $result = $conn->query($sql);
 
