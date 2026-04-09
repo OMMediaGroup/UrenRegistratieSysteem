@@ -24,7 +24,7 @@ $sql = "SELECT
             `Omschrijving`,
             `Aanvraag datum`,
             `Benodigde kennis`
-        FROM `opdrachten`";     // ← hier stond een komma te veel
+        FROM `Opdrachten`";     // ← hier stond een komma te veel
 
 $result = $conn->query($sql);
 
